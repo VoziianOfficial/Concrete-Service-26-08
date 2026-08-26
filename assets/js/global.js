@@ -4,7 +4,7 @@
   document.title = pageTitle === cfg.browserTitle ? cfg.browserTitle : `${pageTitle} | ${cfg.browserTitle}`;
   const favicon = document.querySelector('link[rel="icon"]') || document.createElement("link");
   favicon.rel = "icon";
-  favicon.href = cfg.favicon || "assets/icons/favicon.svg";
+  favicon.href = cfg.favicon || "assets/images/icons/concrete-slab.webp";
   document.head.appendChild(favicon);
 
   const rel = (path) => {
@@ -12,6 +12,8 @@
     if (/^(https?:|mailto:|#)/.test(path)) return path;
     return depth + path;
   };
+  const icon = (name, className = "icon") => `<i class="${className}" data-lucide="${name}" aria-hidden="true"></i>`;
+  const brandMark = () => icon("boxes", "brand-icon");
 
   document.querySelectorAll("[data-config]").forEach((el) => {
     const key = el.dataset.config;
@@ -28,24 +30,24 @@
     header.innerHTML = `
       <div class="container header-inner">
         <a class="brand" href="${rel("index.html")}" aria-label="Home">
-          <img src="${rel(cfg.logo || "assets/icons/drop-logo.svg")}" alt="" width="56" height="56">
+          ${cfg.logo ? `<img src="${rel(cfg.logo)}" alt="" width="56" height="56">` : brandMark()}
           <span>${cfg.companyName || ""}</span>
         </a>
         <nav class="nav" aria-label="Main navigation">
           <a class="${active === "home" ? "active" : ""}" href="${rel("index.html")}">Home</a>
           <a href="${rel("index.html#about")}">About Us</a>
           <div class="dropdown">
-            <button type="button" aria-haspopup="true">Services +</button>
+            <button type="button" aria-haspopup="true">Services ${icon("chevron-down", "icon nav-icon")}</button>
             <div class="dropdown-panel">
-              <a href="${rel("concrete-installation.html")}">Concrete Installation <span>-></span></a>
-              <a href="${rel("concrete-repair.html")}">Concrete Repair & Resurfacing <span>-></span></a>
+              <a href="${rel("concrete-installation.html")}">Concrete Installation ${icon("arrow-right", "icon link-icon")}</a>
+              <a href="${rel("concrete-repair.html")}">Concrete Repair & Resurfacing ${icon("arrow-right", "icon link-icon")}</a>
             </div>
           </div>
           <a href="${rel("index.html#contact")}">Contact</a>
         </nav>
         <div class="header-cta">
-          <a class="btn" href="${rel("index.html#contact")}">Get a Quote <span class="arrow">-></span></a>
-          <button class="menu-toggle" type="button" aria-label="Open menu"><span></span><span></span><span></span></button>
+          <a class="btn" href="${rel("index.html#contact")}">Get a Quote ${icon("arrow-right", "icon arrow")}</a>
+          <button class="menu-toggle" type="button" aria-label="Open menu">${icon("menu", "icon")}</button>
         </div>
       </div>`;
   }
@@ -61,15 +63,15 @@
           </div>
           <div class="cta-panel">
             <p class="lead">Tell us what you need poured, repaired, or resurfaced. We will route your request into a clear concrete service brief.</p>
-            <a class="btn" href="${rel("index.html#contact")}">Start Request <span class="arrow">-></span></a>
-            <a class="btn ghost" href="mailto:${cfg.email || ""}">${cfg.email || ""}</a>
+            <a class="btn" href="${rel("index.html#contact")}">Start Request ${icon("arrow-right", "icon arrow")}</a>
+            <a class="btn ghost" href="mailto:${cfg.email || ""}">${icon("mail", "icon")} ${cfg.email || ""}</a>
           </div>
         </div>
       </section>
       <div class="container footer-main">
         <div>
           <a class="brand" href="${rel("index.html")}">
-            <img src="${rel(cfg.logo || "assets/icons/drop-logo.svg")}" alt="" width="56" height="56">
+            ${cfg.logo ? `<img src="${rel(cfg.logo)}" alt="" width="56" height="56">` : brandMark()}
             <span>${cfg.companyName || ""}</span>
           </a>
           <p>${cfg.disclaimer || ""}</p>
@@ -84,7 +86,7 @@
   const overlay = document.querySelector("[data-mobile-overlay]");
   if (overlay) {
     overlay.innerHTML = `
-      <button class="mobile-close" type="button" aria-label="Close menu">x</button>
+      <button class="mobile-close" type="button" aria-label="Close menu">${icon("x", "icon")}</button>
       <nav class="mobile-nav" aria-label="Mobile navigation">
         <a href="${rel("index.html")}">Home</a>
         <a href="${rel("index.html#about")}">About Us</a>
@@ -130,6 +132,14 @@
         status.textContent = "Message could not be sent right now";
       }
     });
+  });
+
+  window.lucide?.createIcons({
+    attrs: {
+      "stroke-width": 2,
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    }
   });
 
   window.AOS?.init();

@@ -32,6 +32,19 @@ body.menu-open { overflow: hidden; }
 img { display: block; max-width: 100%; height: auto; }
 a { color: inherit; text-decoration: none; }
 button, input, textarea, select { font: inherit; }
+.icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  stroke-width: 2;
+}
+.brand-icon {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  color: var(--orange);
+  stroke-width: 1.85;
+}
 
 .container {
   width: min(calc(100% - 48px), var(--container));
@@ -150,6 +163,16 @@ button, input, textarea, select { font: inherit; }
   cursor: pointer;
   padding: 10px 0;
 }
+.nav button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-basis: 18px;
+}
 .nav a:hover, .nav button:hover, .nav .active { color: var(--orange); }
 .dropdown { position: relative; }
 .dropdown-panel {
@@ -173,6 +196,8 @@ button, input, textarea, select { font: inherit; }
 }
 .dropdown-panel a {
   display: flex;
+  align-items: center;
+  gap: 16px;
   justify-content: space-between;
   padding: 13px 14px;
   border-radius: 8px;
@@ -182,6 +207,7 @@ button, input, textarea, select { font: inherit; }
 .header-cta { display: flex; align-items: center; gap: 12px; }
 .menu-toggle {
   display: none;
+  place-items: center;
   width: 50px;
   height: 50px;
   border: 1px solid rgba(255, 255, 255, .18);
@@ -189,13 +215,6 @@ button, input, textarea, select { font: inherit; }
   background: transparent;
   color: var(--paper);
   cursor: pointer;
-}
-.menu-toggle span {
-  display: block;
-  width: 22px;
-  height: 2px;
-  margin: 5px auto;
-  background: currentColor;
 }
 .mobile-overlay {
   position: fixed;
@@ -214,13 +233,14 @@ button, input, textarea, select { font: inherit; }
   position: absolute;
   top: 24px;
   right: 24px;
+  display: grid;
+  place-items: center;
   width: 50px;
   height: 50px;
   border: 1px solid rgba(255, 255, 255, .2);
   border-radius: 8px;
   background: transparent;
   color: var(--paper);
-  font-size: 2rem;
   cursor: pointer;
 }
 .mobile-nav {
@@ -291,7 +311,7 @@ button, input, textarea, select { font: inherit; }
   width: 100%;
   height: 14px;
   background-color: var(--orange);
-  background-image: url("../icons/stripe.svg");
+  background-image: repeating-linear-gradient(135deg, transparent 0 14px, var(--black) 14px 28px);
   background-size: 64px 14px;
 }
 
@@ -318,12 +338,11 @@ button, input, textarea, select { font: inherit; }
   text-transform: uppercase;
   white-space: nowrap;
 }
-.cube-mark {
-  width: 22px;
-  height: 22px;
-  transform: rotate(45deg);
-  background: var(--black);
-  box-shadow: 9px 9px 0 rgba(0, 0, 0, .28);
+.marquee-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--black);
+  stroke-width: 2;
 }
 
 .visual-card {
@@ -356,6 +375,8 @@ button, input, textarea, select { font: inherit; }
   font-weight: 900;
   text-transform: uppercase;
 }
+.link-icon { transition: transform .2s ease; }
+a:hover .link-icon, button:hover .link-icon { transform: translateX(4px); }
 
 .split-heading {
   display: grid;
@@ -437,7 +458,9 @@ button, input, textarea, select { font: inherit; }
   padding: clamp(24px, 4vw, 44px);
   background: var(--black);
   color: var(--paper);
+  border: 1px solid rgba(255, 255, 255, .1);
   border-radius: 16px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .18);
 }
 .form-grid {
   display: grid;
@@ -449,19 +472,65 @@ button, input, textarea, select { font: inherit; }
   display: block;
   margin-bottom: 10px;
   color: var(--soft);
-  font-weight: 700;
+  font-size: .78rem;
+  font-weight: 900;
+  letter-spacing: .18em;
+  text-transform: uppercase;
 }
 .field input, .field textarea, .field select {
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   border: 1px solid rgba(255, 255, 255, .08);
   border-radius: 10px;
-  background: #242424;
+  background: #1f1f1f;
   color: var(--paper);
   padding: 16px 18px;
   outline: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0);
+  transition: background .2s ease, border-color .2s ease, box-shadow .2s ease, color .2s ease;
 }
-.field textarea { min-height: 150px; resize: vertical; }
-.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--orange); }
+.field select { cursor: pointer; padding-right: 54px; }
+.field textarea {
+  min-height: 150px;
+  resize: vertical;
+  scrollbar-width: thin;
+  scrollbar-color: var(--orange) #1f1f1f;
+}
+.field textarea::-webkit-scrollbar { width: 10px; }
+.field textarea::-webkit-scrollbar-track { background: #1f1f1f; border-radius: 999px; }
+.field textarea::-webkit-scrollbar-thumb {
+  background: var(--orange);
+  border: 3px solid #1f1f1f;
+  border-radius: 999px;
+}
+.field input::placeholder, .field textarea::placeholder { color: rgba(238, 238, 236, .42); }
+.field input:hover, .field textarea:hover, .field select:hover { border-color: rgba(255, 255, 255, .18); }
+.field input:focus, .field textarea:focus, .field select:focus {
+  background: #262626;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 4px rgba(255, 114, 0, .14);
+}
+.field input:user-invalid, .field textarea:user-invalid, .field select:user-invalid {
+  border-color: #ff4d2f;
+  box-shadow: 0 0 0 4px rgba(255, 77, 47, .12);
+}
+.field input:-webkit-autofill {
+  -webkit-text-fill-color: var(--paper);
+  box-shadow: 0 0 0 1000px #1f1f1f inset;
+  caret-color: var(--paper);
+}
+.select-wrap {
+  position: relative;
+}
+.select-wrap .icon {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  color: var(--orange);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
 .form-status { min-height: 24px; color: var(--orange); font-weight: 800; }
 
 .legal-content {
@@ -508,6 +577,8 @@ button, input, textarea, select { font: inherit; }
   font-weight: 900;
   cursor: pointer;
 }
+.faq-icon { transition: transform .22s ease; }
+.faq-item.open .faq-icon { transform: rotate(45deg); }
 .faq-answer {
   display: grid;
   grid-template-rows: 0fr;
@@ -532,7 +603,7 @@ button, input, textarea, select { font: inherit; }
 
 @media (max-width: 1100px) {
   .nav, .header-cta .btn { display: none; }
-  .menu-toggle { display: block; }
+  .menu-toggle { display: grid; }
   .hero-grid, .split-heading, .cta-inner { grid-template-columns: 1fr; }
   .hero { text-align: center; }
   .hero-actions { justify-content: center; }
@@ -544,6 +615,7 @@ button, input, textarea, select { font: inherit; }
   .site-header { height: 78px; }
   .brand { font-size: 1.55rem; }
   .brand img { width: 44px; height: 44px; }
+  .brand-icon { width: 44px; height: 44px; flex-basis: 44px; }
   .hero { padding-top: 108px; }
   .hero-media { min-height: 330px; }
   .headline, .headline.mid, .headline.small { text-align: center; }
