@@ -140,4 +140,10 @@
 }
 @media (max-width: 720px) {
   .legal-hero { min-height: 58svh; padding-top: 108px; }
+  .legal-content-block h2 {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+  }
 }
