@@ -4,6 +4,10 @@
   gap: clamp(30px, 6vw, 90px);
   align-items: end;
 }
+.split-heading > *,
+.services-swiper {
+  min-width: 0;
+}
 .about-copy .lead { max-width: 680px; }
 .about-photo {
   height: clamp(360px, 46vw, 640px);
@@ -56,6 +60,10 @@
 }
 
 .services-slider { margin-top: 30px; }
+.services-swiper {
+  overflow: hidden;
+  touch-action: pan-y;
+}
 .service-card {
   margin-right: 0;
   min-height: 530px;
@@ -85,11 +93,23 @@
   place-items: center;
   width: 50px;
   height: 50px;
+  position: relative;
+  z-index: 20;
+  pointer-events: auto;
   border-radius: 8px;
   background: var(--panel);
   color: var(--orange);
   border: 1px solid rgba(255,255,255,.12);
+  cursor: pointer;
+  transition: transform .2s ease, border-color .2s ease, background .2s ease, color .2s ease;
 }
+.slider-controls button:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 114, 0, .64);
+  background: var(--orange);
+  color: var(--black);
+}
+.slider-controls button:active { transform: translateY(0); }
 
 .why-grid {
   display: grid;
@@ -154,6 +174,9 @@
   grid-template-columns: 360px minmax(0, 1fr) 330px;
   gap: 28px;
   align-items: stretch;
+}
+.applications-grid > * {
+  min-width: 0;
 }
 .application-list {
   display: grid;
@@ -238,7 +261,7 @@
 @media (max-width: 720px) {
   .about-photo::before { display: none; }
   .benefit-strip, .why-cards { grid-template-columns: 1fr; }
-  .service-card { min-height: 470px; margin-right: 14px; }
+  .service-card { min-height: 470px; margin-right: 0; }
   .why-photo, .application-feature, .application-side { min-height: 340px; }
   .why-card { min-height: 150px; padding-right: 106px; }
   .why-card .card-illustration { width: 82px; height: 66px; }

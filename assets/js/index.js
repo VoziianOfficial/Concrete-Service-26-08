@@ -1,16 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
-  new Swiper(".services-swiper", {
+  document.querySelectorAll(".services-swiper").forEach((swiperEl) => new Swiper(swiperEl, {
     loop: true,
-    slidesPerView: 1,
-    spaceBetween: 18,
+    slidesPerView: 1.08,
+    spaceBetween: 14,
     watchOverflow: false,
     autoplay: { delay: 3600 },
     navigation: {
-      nextEl: ".services-swiper .swiper-button-next",
-      prevEl: ".services-swiper .swiper-button-prev"
+      nextEl: swiperEl.querySelector(".swiper-button-next"),
+      prevEl: swiperEl.querySelector(".swiper-button-prev")
     },
-    breakpoints: { 720: { slidesPerView: 2 }, 1120: { slidesPerView: 3 } }
-  });
+    loopAdditionalSlides: 4,
+    breakpoints: {
+      720: { slidesPerView: 2, spaceBetween: 18 },
+      1120: { slidesPerView: 3, spaceBetween: 22 }
+    }
+  }));
 
   const appData = {
     driveways: ["Driveways", "Load-bearing mixes, clean edge forming, and finish options planned around daily vehicle use.", "assets/images/concrete-driveway.webp"],
