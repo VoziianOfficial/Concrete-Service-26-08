@@ -1,0 +1,1 @@
+window.AOS={init(){const items=[...document.querySelectorAll("[data-aos]")];if(!items.length)return;const io=new IntersectionObserver((entries)=>{entries.forEach((entry)=>{if(entry.isIntersecting){entry.target.classList.add("aos-animate");io.unobserve(entry.target)}})},{threshold:.16,rootMargin:"0px 0px -6% 0px"});items.forEach((item)=>io.observe(item))}};

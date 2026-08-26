@@ -1,0 +1,13 @@
+.legal-hero {
+  min-height: 68svh;
+  padding-top: 132px;
+  background: var(--black);
+  color: var(--paper);
+  display: grid;
+  align-items: center;
+}
+.legal-hero .lead { max-width: 760px; }
+.legal-page { background: var(--paper); }
+@media (max-width: 720px) {
+  .legal-hero { min-height: 58svh; padding-top: 108px; text-align: center; }
+}
