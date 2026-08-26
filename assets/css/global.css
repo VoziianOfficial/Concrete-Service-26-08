@@ -1063,6 +1063,136 @@ a:hover .link-icon, button:hover .link-icon { transform: translateX(4px); }
   }
 }
 @media (max-width: 767px) {
+  .home-showcase-section {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+  .home-showcase-section .container {
+    width: min(calc(100% - 32px), var(--container));
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .home-showcase-section .showcase-swiper {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: visible;
+    touch-action: manipulation;
+  }
+  .home-showcase-section .showcase-swiper .swiper-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    transform: none !important;
+    transition: none;
+  }
+  .home-showcase-section .showcase-slide,
+  .home-showcase-section .showcase-swiper:not(.is-ready) .showcase-slide:first-child,
+  .home-showcase-section .showcase-slide.is-active,
+  .home-showcase-section .showcase-slide.swiper-slide-active {
+    width: 100% !important;
+    max-width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transform: none;
+    transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+  }
+  .home-showcase-section .showcase-slide:focus-visible {
+    outline: 3px solid rgba(245, 140, 32, .72);
+    outline-offset: 3px;
+  }
+  .home-showcase-section .showcase-slide::after {
+    display: none;
+  }
+  .home-showcase-section .showcase-slide img,
+  .home-showcase-section .showcase-swiper:not(.is-ready) .showcase-slide:first-child img,
+  .home-showcase-section .showcase-slide.is-active img,
+  .home-showcase-section .showcase-slide.swiper-slide-active img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    transform: none;
+  }
+  .home-showcase-section .showcase-slide-copy,
+  .home-showcase-section .showcase-swiper:not(.is-ready) .showcase-slide:first-child .showcase-slide-copy,
+  .home-showcase-section .showcase-slide.is-active .showcase-slide-copy,
+  .home-showcase-section .showcase-slide.swiper-slide-active .showcase-slide-copy {
+    position: static;
+    display: grid;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 18px 18px 20px;
+    opacity: 1;
+    transform: none;
+    box-sizing: border-box;
+  }
+  .home-showcase-section .showcase-slide-copy span {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+  .home-showcase-section .showcase-slide-copy strong {
+    display: block;
+    max-width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding-top: 0;
+    color: var(--paper);
+    font-size: clamp(1.2rem, 7vw, 1.8rem);
+    line-height: 1.02;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    transition: max-height .36s ease, opacity .24s ease, padding-top .24s ease;
+  }
+  .home-showcase-section .showcase-slide.is-mobile-open {
+    box-shadow: 0 18px 40px rgba(8, 8, 8, .16);
+    transform: translateY(-2px);
+  }
+  .home-showcase-section .showcase-slide.is-mobile-open .showcase-slide-copy strong {
+    max-height: 180px;
+    opacity: 1;
+    padding-top: 10px;
+  }
+  .home-showcase-section .showcase-plus,
+  .home-showcase-section .showcase-slide:first-child .showcase-plus,
+  .home-showcase-section .showcase-swiper:not(.is-ready) .showcase-slide:first-child .showcase-plus,
+  .home-showcase-section .showcase-slide.is-active .showcase-plus,
+  .home-showcase-section .showcase-slide.swiper-slide-active .showcase-plus {
+    top: 12px;
+    right: 12px;
+    bottom: auto;
+    width: 38px;
+    height: 38px;
+    background: var(--orange);
+    border-color: var(--orange);
+    color: var(--black);
+  }
+  .home-showcase-section .showcase-plus .icon {
+    transition: transform .28s ease;
+  }
+  .home-showcase-section .showcase-slide.is-mobile-open .showcase-plus {
+    transform: none;
+  }
+  .home-showcase-section .showcase-slide.is-mobile-open .showcase-plus .icon {
+    transform: rotate(180deg);
+  }
+
   .installation-showcase-section,
   .repair-showcase-section {
     width: 100%;

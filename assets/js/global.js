@@ -163,7 +163,7 @@
     if (!wrapper || slides.length < 2) return;
 
     const mobileQuery = window.matchMedia("(max-width: 767px)");
-    const usesMobileAccordion = Boolean(swiperEl.closest(".installation-showcase-section, .repair-showcase-section"));
+    const usesMobileAccordion = Boolean(swiperEl.closest(".home-showcase-section, .installation-showcase-section, .repair-showcase-section"));
     let activeIndex = 0;
     let startX = 0;
     let currentX = 0;
