@@ -21,4 +21,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
   });
+
+  document.querySelectorAll("[data-project-filter]").forEach((tabs) => {
+    const grid = tabs.nextElementSibling;
+    if (!grid) return;
+    const tiles = grid.querySelectorAll("[data-category]");
+
+    tabs.querySelectorAll("button").forEach((button) => {
+      button.addEventListener("click", () => {
+        tabs.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
+        button.classList.add("active");
+        const filter = button.dataset.filter;
+        tiles.forEach((tile) => {
+          tile.style.display = filter === "all" || tile.dataset.category === filter ? "" : "none";
+        });
+      });
+    });
+  });
 });

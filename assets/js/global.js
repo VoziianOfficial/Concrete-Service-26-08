@@ -115,6 +115,61 @@
     button.addEventListener("click", () => button.closest(".faq-item").classList.toggle("open"));
   });
 
+  document.querySelectorAll(".showcase-swiper").forEach((swiperEl) => {
+    const wrapper = swiperEl.querySelector(".swiper-wrapper");
+    const slides = Array.from(swiperEl.querySelectorAll(".showcase-slide"));
+    if (!wrapper || slides.length < 2) return;
+
+    let activeIndex = 0;
+    let startX = 0;
+    let currentX = 0;
+    let timer;
+
+    const sync = () => {
+      slides.forEach((slide, index) => slide.classList.toggle("is-active", index === activeIndex));
+      swiperEl.classList.add("is-ready");
+      requestAnimationFrame(() => {
+        const active = slides[activeIndex];
+        const maxOffset = Math.max(0, wrapper.scrollWidth - swiperEl.clientWidth);
+        const centered = active.offsetLeft - (swiperEl.clientWidth - active.offsetWidth) / 2;
+        const offset = Math.min(maxOffset, Math.max(0, centered));
+        wrapper.style.transform = `translate3d(${-offset}px, 0, 0)`;
+      });
+    };
+    const goTo = (index) => {
+      activeIndex = (index + slides.length) % slides.length;
+      sync();
+    };
+    const restart = () => {
+      clearInterval(timer);
+      timer = setInterval(() => goTo(activeIndex + 1), 3800);
+    };
+
+    slides.forEach((slide, index) => {
+      slide.addEventListener("click", () => {
+        goTo(index);
+        restart();
+      });
+    });
+    swiperEl.addEventListener("pointerdown", (event) => {
+      startX = event.clientX;
+      currentX = event.clientX;
+    });
+    swiperEl.addEventListener("pointermove", (event) => {
+      currentX = event.clientX;
+    });
+    swiperEl.addEventListener("pointerup", () => {
+      const delta = currentX - startX;
+      if (Math.abs(delta) > 44) {
+        goTo(activeIndex + (delta < 0 ? 1 : -1));
+        restart();
+      }
+    });
+    window.addEventListener("resize", sync);
+    sync();
+    restart();
+  });
+
   document.querySelectorAll("form[data-ajax-form]").forEach((form) => {
     const status = form.querySelector(".form-status");
     const emailField = form.querySelector('[name="configEmail"]');

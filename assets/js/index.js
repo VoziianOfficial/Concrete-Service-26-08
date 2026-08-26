@@ -28,6 +28,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }));
 
+  document.querySelectorAll(".testimonial-swiper").forEach((swiperEl) => {
+    const avatars = Array.from(swiperEl.closest(".testimonial-copy")?.querySelectorAll(".testimonial-avatar") ?? []);
+    const swiper = new Swiper(swiperEl, {
+      loop: true,
+      autoplay: { delay: 5200 }
+    });
+    if (!avatars.length || !swiper.realCount) return;
+
+    const syncAvatars = () => {
+      const real = ((swiper.activeIndex - swiper.cloneCount) % swiper.realCount + swiper.realCount) % swiper.realCount;
+      avatars.forEach((avatar, i) => avatar.classList.toggle("active", i === real));
+    };
+    avatars.forEach((avatar, i) => avatar.addEventListener("click", () => swiper.goTo(swiper.cloneCount + i)));
+    setInterval(syncAvatars, 250);
+  });
+
   const parallaxPhotos = document.querySelectorAll("[data-parallax-photo] img");
   const updateParallaxPhotos = () => {
     parallaxPhotos.forEach((image) => {
