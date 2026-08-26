@@ -125,7 +125,7 @@
   color: var(--paper);
   background:
     linear-gradient(rgba(0, 0, 0, .58), rgba(0, 0, 0, .62)),
-    url("../images/fun-facts-concrete-bg.png") center / cover fixed;
+    url("../images/fun-facts-concrete-bg.webp") center / cover fixed;
 }
 .facts-grid {
   position: relative;
@@ -488,7 +488,7 @@
   padding: clamp(34px, 5vw, 82px);
   background:
     linear-gradient(rgba(0, 0, 0, .68), rgba(0, 0, 0, .72)),
-    url("../images/action-swiper-bg.png") center / cover fixed;
+    url("../images/action-swiper-bg.webp") center / cover fixed;
 }
 .action-swiper {
   overflow: hidden;
