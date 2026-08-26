@@ -110,4 +110,63 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => { image.src = item[2]; image.alt = item[0]; image.style.opacity = ".78"; }, 140);
     });
   });
+
+  const buildSection = document.querySelector("[data-ground-up]");
+  if (buildSection) {
+    const stages = Array.from(buildSection.querySelectorAll("[data-ground-stage]"));
+    const progressLine = buildSection.querySelector("[data-ground-progress]");
+    const visual = buildSection.querySelector("[data-ground-visual]");
+    const layers = Array.from(buildSection.querySelectorAll("[data-layer-stage]"));
+    const effects = Array.from(buildSection.querySelectorAll("[data-effect-stage]"));
+    const annotations = Array.from(buildSection.querySelectorAll("[data-annotation-stage]"));
+    const final = buildSection.querySelector("[data-final-stage]");
+    const highlight = buildSection.querySelector('[data-build-layer="highlight"]');
+    let activeStage = 1;
+
+    const setBuildStage = (stage) => {
+      const nextStage = Math.max(1, Math.min(5, Number(stage) || 1));
+      const shouldRunParticles = nextStage === 2 && activeStage !== 2;
+      const shouldRunTool = nextStage === 5 && activeStage !== 5;
+      activeStage = nextStage;
+
+      stages.forEach((button) => {
+        const isActive = Number(button.dataset.groundStage) === nextStage;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+      layers.forEach((layer) => {
+        const layerStage = Number(layer.dataset.layerStage) || 1;
+        layer.classList.toggle("is-visible", layerStage <= nextStage);
+      });
+      effects.forEach((effect) => {
+        const effectStage = Number(effect.dataset.effectStage) || 0;
+        effect.classList.toggle("is-visible", shouldRunParticles && effectStage === nextStage);
+      });
+      annotations.forEach((annotation) => {
+        const annotationStage = Number(annotation.dataset.annotationStage) || 1;
+        annotation.classList.toggle("is-visible", annotationStage <= nextStage);
+      });
+      highlight?.classList.toggle("is-visible", nextStage === 3);
+      final?.classList.toggle("is-visible", nextStage === 5);
+      if (progressLine) progressLine.style.height = `${(nextStage / stages.length) * 100}%`;
+      visual?.setAttribute("data-active-stage", String(nextStage));
+
+      if (visual && shouldRunTool) {
+        visual.classList.remove("is-tool-pass");
+        void visual.offsetWidth;
+        visual.classList.add("is-tool-pass");
+      }
+    };
+
+    stages.forEach((button) => {
+      button.addEventListener("mouseenter", () => setBuildStage(button.dataset.groundStage));
+      button.addEventListener("focus", () => setBuildStage(button.dataset.groundStage));
+      button.addEventListener("click", () => setBuildStage(button.dataset.groundStage));
+    });
+    visual?.addEventListener("animationend", (event) => {
+      if (event.animationName === "groundTrowelPass") visual.classList.remove("is-tool-pass");
+      if (event.animationName === "groundGravelDrop") event.target.classList.remove("is-visible");
+    });
+    setBuildStage(1);
+  }
 });
