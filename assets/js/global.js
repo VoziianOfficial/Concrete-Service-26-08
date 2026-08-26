@@ -144,6 +144,17 @@
 
   applySiteConfig();
 
+  const revealHeroes = () => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll(".hero").forEach((hero) => hero.classList.add("is-revealed"));
+    });
+  };
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", revealHeroes, { once: true });
+  } else {
+    revealHeroes();
+  }
+
   const cookie = document.querySelector("[data-cookie-card]");
   if (cookie && localStorage.getItem("sd_cookie_ok") !== "1") {
     cookie.classList.add("show");
