@@ -325,12 +325,15 @@
 }
 .home-why-section .why-cards {
   position: sticky;
-  top: 112px;
+  top: var(--sticky-offset);
   z-index: 2;
+  align-self: flex-start;
+  height: fit-content;
+}
+.why-cards__inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  align-self: start;
 }
 .why-card {
   position: relative;
@@ -602,10 +605,14 @@
     height: 240px;
     border-radius: 16px;
   }
+  .action-copy {
+    justify-items: center;
+    text-align: center;
+  }
 }
 @media (max-width: 720px) {
   .about-photo::before { display: none; }
-  .benefit-strip, .why-cards { grid-template-columns: 1fr; }
+  .benefit-strip, .why-cards__inner { grid-template-columns: 1fr; }
   .facts-panel {
     padding-top: 78px;
     background-attachment: scroll;

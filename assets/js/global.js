@@ -87,14 +87,15 @@
   if (overlay) {
     overlay.innerHTML = `
       <button class="mobile-close" type="button" aria-label="Close menu">${icon("x", "icon")}</button>
+      <div class="mobile-menu-photo" aria-hidden="true"><img src="${rel("assets/images/concrete-mixer.webp")}" alt="" width="1600" height="1067"></div>
       <nav class="mobile-nav" aria-label="Mobile navigation">
-        <a href="${rel("index.html")}">Home</a>
-        <a href="${rel("index.html#about")}">About Us</a>
+        <a href="${rel("index.html")}">${icon("home", "mobile-link-icon")}<span>Home</span></a>
+        <a href="${rel("index.html#about")}">${icon("hard-hat", "mobile-link-icon")}<span>About Us</span></a>
         <div class="mobile-services">
-          <a href="${rel("concrete-installation.html")}">Concrete Installation</a>
-          <a href="${rel("concrete-repair.html")}">Concrete Repair & Resurfacing</a>
+          <a href="${rel("concrete-installation.html")}">${icon("construction", "mobile-link-icon")}<span>Concrete Installation</span></a>
+          <a href="${rel("concrete-repair.html")}">${icon("wrench", "mobile-link-icon")}<span>Concrete Repair & Resurfacing</span></a>
         </div>
-        <a href="${rel("index.html#contact")}">Contact</a>
+        <a href="${rel("index.html#contact")}">${icon("mail", "mobile-link-icon")}<span>Contact</span></a>
       </nav>`;
     const close = () => { overlay.classList.remove("open"); document.body.classList.remove("menu-open"); };
     document.querySelector(".menu-toggle")?.addEventListener("click", () => { overlay.classList.add("open"); document.body.classList.add("menu-open"); });
@@ -120,12 +121,35 @@
     const slides = Array.from(swiperEl.querySelectorAll(".showcase-slide"));
     if (!wrapper || slides.length < 2) return;
 
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    const usesMobileAccordion = Boolean(swiperEl.closest(".installation-showcase-section, .repair-showcase-section"));
     let activeIndex = 0;
     let startX = 0;
     let currentX = 0;
     let timer;
+    let isMobileAccordion = false;
 
+    const renderLucideIcons = () => {
+      window.lucide?.createIcons({
+        attrs: {
+          "stroke-width": 2,
+          "stroke-linecap": "round",
+          "stroke-linejoin": "round"
+        }
+      });
+    };
+    const setToggleIcons = (icon) => {
+      if (!usesMobileAccordion) return;
+      slides.forEach((slide) => {
+        const toggle = slide.querySelector(".showcase-plus");
+        if (!toggle || toggle.dataset.showcaseIcon === icon) return;
+        toggle.dataset.showcaseIcon = icon;
+        toggle.innerHTML = `<i class="icon" data-lucide="${icon}" aria-hidden="true"></i>`;
+      });
+      renderLucideIcons();
+    };
     const sync = () => {
+      if (usesMobileAccordion && mobileQuery.matches) return;
       slides.forEach((slide, index) => slide.classList.toggle("is-active", index === activeIndex));
       swiperEl.classList.add("is-ready");
       requestAnimationFrame(() => {
@@ -144,30 +168,88 @@
       clearInterval(timer);
       timer = setInterval(() => goTo(activeIndex + 1), 3800);
     };
+    const closeMobileSlides = (exceptSlide) => {
+      slides.forEach((slide) => {
+        if (slide === exceptSlide) return;
+        slide.classList.remove("is-mobile-open");
+        slide.setAttribute("aria-expanded", "false");
+      });
+    };
+    const enableMobileAccordion = () => {
+      if (isMobileAccordion) return;
+      isMobileAccordion = true;
+      clearInterval(timer);
+      wrapper.style.transform = "";
+      swiperEl.classList.add("is-ready", "is-mobile-accordion");
+      setToggleIcons("chevron-down");
+      slides.forEach((slide) => {
+        slide.classList.remove("is-active", "swiper-slide-active");
+        slide.classList.remove("is-mobile-open");
+        slide.setAttribute("role", "button");
+        slide.setAttribute("tabindex", "0");
+        slide.setAttribute("aria-expanded", "false");
+      });
+    };
+    const enableDesktopShowcase = () => {
+      if (isMobileAccordion) {
+        isMobileAccordion = false;
+        swiperEl.classList.remove("is-mobile-accordion");
+        setToggleIcons("plus");
+        slides.forEach((slide) => {
+          slide.classList.remove("is-mobile-open");
+          slide.removeAttribute("role");
+          slide.removeAttribute("tabindex");
+          slide.removeAttribute("aria-expanded");
+        });
+      }
+      sync();
+      restart();
+    };
+    const updateMode = () => {
+      if (usesMobileAccordion && mobileQuery.matches) {
+        enableMobileAccordion();
+        return;
+      }
+      enableDesktopShowcase();
+    };
 
     slides.forEach((slide, index) => {
       slide.addEventListener("click", () => {
+        if (isMobileAccordion) {
+          const willOpen = !slide.classList.contains("is-mobile-open");
+          closeMobileSlides(slide);
+          slide.classList.toggle("is-mobile-open", willOpen);
+          slide.setAttribute("aria-expanded", String(willOpen));
+          return;
+        }
         goTo(index);
         restart();
       });
+      slide.addEventListener("keydown", (event) => {
+        if (!isMobileAccordion || (event.key !== "Enter" && event.key !== " ")) return;
+        event.preventDefault();
+        slide.click();
+      });
     });
     swiperEl.addEventListener("pointerdown", (event) => {
+      if (isMobileAccordion) return;
       startX = event.clientX;
       currentX = event.clientX;
     });
     swiperEl.addEventListener("pointermove", (event) => {
+      if (isMobileAccordion) return;
       currentX = event.clientX;
     });
     swiperEl.addEventListener("pointerup", () => {
+      if (isMobileAccordion) return;
       const delta = currentX - startX;
       if (Math.abs(delta) > 44) {
         goTo(activeIndex + (delta < 0 ? 1 : -1));
         restart();
       }
     });
-    window.addEventListener("resize", sync);
-    sync();
-    restart();
+    window.addEventListener("resize", updateMode);
+    updateMode();
   });
 
   document.querySelectorAll("form[data-ajax-form]").forEach((form) => {
