@@ -16,6 +16,61 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }));
 
+  document.querySelectorAll(".action-swiper").forEach((swiperEl) => new Swiper(swiperEl, {
+    loop: true,
+    slidesPerView: 1.04,
+    spaceBetween: 16,
+    autoplay: { delay: 4200 },
+    loopAdditionalSlides: 4,
+    breakpoints: {
+      820: { slidesPerView: 1.18, spaceBetween: 18 },
+      1180: { slidesPerView: 2, spaceBetween: 28 }
+    }
+  }));
+
+  const parallaxPhotos = document.querySelectorAll("[data-parallax-photo] img");
+  const updateParallaxPhotos = () => {
+    parallaxPhotos.forEach((image) => {
+      const rect = image.parentElement.getBoundingClientRect();
+      const progress = (rect.top + rect.height / 2 - window.innerHeight / 2) / window.innerHeight;
+      const offset = Math.max(-14, Math.min(8, progress * -18));
+      image.style.setProperty("--parallax-y", `${offset}%`);
+    });
+  };
+  if (parallaxPhotos.length) {
+    updateParallaxPhotos();
+    window.addEventListener("scroll", updateParallaxPhotos, { passive: true });
+    window.addEventListener("resize", updateParallaxPhotos);
+  }
+
+  const counters = document.querySelectorAll("[data-counter]");
+  const animateCounter = (counter) => {
+    const target = Number(counter.dataset.counter) || 0;
+    const duration = 1300;
+    const start = performance.now();
+
+    const tick = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      counter.textContent = Math.round(target * eased).toString();
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
+  };
+
+  if (counters.length) {
+    const counterObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: .45 });
+
+    counters.forEach((counter) => counterObserver.observe(counter));
+  }
+
   const appData = {
     driveways: ["Driveways", "Load-bearing mixes, clean edge forming, and finish options planned around daily vehicle use.", "assets/images/concrete-driveway.webp"],
     patios: ["Patios", "Outdoor living slabs shaped for drainage, texture, and long-term surface comfort.", "assets/images/concrete-slab.webp"],
