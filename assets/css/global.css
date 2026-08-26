@@ -999,8 +999,12 @@ a:hover .link-icon, button:hover .link-icon { transform: translateX(4px); }
     padding-inline: 16px;
   }
   .headline, .headline.mid, .headline.small { text-align: center; }
-  .showcase-heading { margin-bottom: 24px; }
-  .showcase-title { font-size: 1.95rem; }
+  .showcase-heading { margin-bottom: 28px; }
+  .showcase-title {
+    max-width: min(100%, 12.5ch);
+    font-size: clamp(2.55rem, 12vw, 3.85rem);
+    line-height: .95;
+  }
   .showcase-slide {
     width: 62px;
     height: 310px;
@@ -1057,9 +1061,6 @@ a:hover .link-icon, button:hover .link-icon { transform: translateX(4px); }
   .mobile-services {
     padding: 4px 0;
   }
-}
-@media (max-width: 420px) {
-  .showcase-title { font-size: 1rem; }
 }
 @media (max-width: 767px) {
   .installation-showcase-section,

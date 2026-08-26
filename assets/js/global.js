@@ -1,37 +1,72 @@
 (function () {
   const cfg = window.SiteConfig || {};
-  const pageTitle = document.body.dataset.pageTitle || cfg.browserTitle || "Concrete Services";
-  document.title = pageTitle === cfg.browserTitle ? cfg.browserTitle : `${pageTitle} | ${cfg.browserTitle}`;
-  const favicon = document.querySelector('link[rel="icon"]') || document.createElement("link");
-  favicon.rel = "icon";
-  favicon.href = cfg.favicon || "assets/images/icons/concrete-slab.webp";
-  document.head.appendChild(favicon);
-
   const rel = (path) => {
     const depth = document.body.dataset.depth || "";
-    if (/^(https?:|mailto:|#)/.test(path)) return path;
+    if (!path || /^(https?:|mailto:|#|data:)/.test(path)) return path;
     return depth + path;
   };
   const icon = (name, className = "icon") => `<i class="${className}" data-lucide="${name}" aria-hidden="true"></i>`;
   const brandMark = () => icon("boxes", "brand-icon");
 
-  document.querySelectorAll("[data-config]").forEach((el) => {
-    const key = el.dataset.config;
-    if (cfg[key]) el.textContent = cfg[key];
-  });
-  document.querySelectorAll("[data-config-href]").forEach((el) => {
-    const key = el.dataset.configHref;
-    if (cfg[key]) el.href = key === "email" ? `mailto:${cfg[key]}` : cfg[key];
-  });
+  function applySiteConfig() {
+    const titleBase = cfg.browserTitle || cfg.companyName || "";
+    const pageTitle = document.body.dataset.pageTitle || titleBase || "Concrete Services";
+    document.title = pageTitle && titleBase && pageTitle !== titleBase ? `${pageTitle} | ${titleBase}` : (pageTitle || titleBase);
+
+    const favicon = document.querySelector('link[rel="icon"]') || document.createElement("link");
+    favicon.rel = "icon";
+    favicon.href = rel(cfg.favicon || "");
+    document.head.appendChild(favicon);
+
+    document.querySelectorAll("[data-config]").forEach((el) => {
+      const key = el.dataset.config;
+      el.textContent = cfg[key] || "";
+    });
+
+    document.querySelectorAll("[data-config-content]").forEach((el) => {
+      const key = el.dataset.configContent;
+      el.setAttribute("content", cfg[key] || "");
+    });
+
+    document.querySelectorAll("[data-config-href]").forEach((el) => {
+      const key = el.dataset.configHref;
+      const value = cfg[key] || "";
+      el.href = key === "email" && value ? `mailto:${value}` : rel(value);
+    });
+
+    document.querySelectorAll("[data-config-email]").forEach((el) => {
+      const email = cfg.email || "";
+      el.textContent = email;
+      el.href = email ? `mailto:${email}` : "mailto:";
+    });
+
+    document.querySelectorAll("[data-config-src]").forEach((el) => {
+      const key = el.dataset.configSrc;
+      const value = cfg[key] || "";
+      if (value) {
+        el.src = rel(value);
+        el.hidden = false;
+      } else {
+        el.removeAttribute("src");
+        el.hidden = true;
+      }
+    });
+
+    document.querySelectorAll("[data-config-aria-label]").forEach((el) => {
+      const key = el.dataset.configAriaLabel;
+      el.setAttribute("aria-label", cfg[key] || "");
+    });
+  }
+  window.applySiteConfig = applySiteConfig;
 
   const header = document.querySelector("[data-site-header]");
   if (header) {
     const active = document.body.dataset.nav || "home";
     header.innerHTML = `
       <div class="container header-inner">
-        <a class="brand" href="${rel("index.html")}" aria-label="Home">
-          ${cfg.logo ? `<img src="${rel(cfg.logo)}" alt="" width="56" height="56">` : brandMark()}
-          <span>${cfg.companyName || ""}</span>
+        <a class="brand" href="${rel("index.html")}" data-config-aria-label="companyName">
+          ${brandMark()}
+          <span data-config="companyName"></span>
         </a>
         <nav class="nav" aria-label="Main navigation">
           <a class="${active === "home" ? "active" : ""}" href="${rel("index.html")}">Home</a>
@@ -64,22 +99,22 @@
           <div class="cta-panel">
             <p class="lead">Tell us what you need poured, repaired, or resurfaced. We will route your request into a clear concrete service brief.</p>
             <a class="btn" href="${rel("index.html#contact")}">Start Request ${icon("arrow-right", "icon arrow")}</a>
-            <a class="btn ghost" href="mailto:${cfg.email || ""}">${icon("mail", "icon")} ${cfg.email || ""}</a>
+            <a class="btn ghost" data-config-href="email" href="mailto:">${icon("mail", "icon")} <span data-config="email"></span></a>
           </div>
         </div>
       </section>
       <div class="container footer-main">
         <div>
           <a class="brand" href="${rel("index.html")}">
-            ${cfg.logo ? `<img src="${rel(cfg.logo)}" alt="" width="56" height="56">` : brandMark()}
-            <span>${cfg.companyName || ""}</span>
+            ${brandMark()}
+            <span data-config="companyName"></span>
           </a>
-          <p>${cfg.disclaimer || ""}</p>
+          <p data-config="disclaimer"></p>
         </div>
         <div><h3 class="footer-title">Quick Links</h3><div class="footer-links"><a href="${rel("index.html")}">Home</a><a href="${rel("index.html#about")}">About Us</a><a href="${rel("index.html#services")}">Services</a><a href="${rel("index.html#contact")}">Contact</a></div></div>
         <div><h3 class="footer-title">Services</h3><div class="footer-links"><a href="${rel("concrete-installation.html")}">Concrete Installation</a><a href="${rel("concrete-repair.html")}">Repair & Resurfacing</a></div></div>
         <div><h3 class="footer-title">Legal</h3><div class="footer-links"><a href="${rel("privacy-policy.html")}">Privacy Policy</a><a href="${rel("terms.html")}">Terms</a><a href="${rel("cookies.html")}">Cookies</a></div></div>
-        <div><h3 class="footer-title">Email</h3><div class="footer-links"><a href="mailto:${cfg.email || ""}">${cfg.email || ""}</a></div></div>
+        <div><h3 class="footer-title">Email</h3><div class="footer-links"><a data-config-email href="mailto:"></a></div></div>
       </div>`;
   }
 
@@ -87,6 +122,10 @@
   if (overlay) {
     overlay.innerHTML = `
       <button class="mobile-close" type="button" aria-label="Close menu">${icon("x", "icon")}</button>
+      <a class="brand mobile-menu-brand" href="${rel("index.html")}" data-config-aria-label="companyName">
+        ${brandMark()}
+        <span data-config="companyName"></span>
+      </a>
       <div class="mobile-menu-photo" aria-hidden="true"><img src="${rel("assets/images/concrete-mixer.webp")}" alt="" width="1600" height="1067"></div>
       <nav class="mobile-nav" aria-label="Mobile navigation">
         <a href="${rel("index.html")}">${icon("home", "mobile-link-icon")}<span>Home</span></a>
@@ -102,6 +141,8 @@
     overlay.querySelector(".mobile-close")?.addEventListener("click", close);
     overlay.querySelectorAll("a").forEach((a) => a.addEventListener("click", close));
   }
+
+  applySiteConfig();
 
   const cookie = document.querySelector("[data-cookie-card]");
   if (cookie && localStorage.getItem("sd_cookie_ok") !== "1") {

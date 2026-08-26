@@ -8,12 +8,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $configPath = __DIR__ . '/config/config.js';
-$recipient = 'hello@stonedropconcrete.com';
+$recipient = '';
 if (is_readable($configPath)) {
     $config = file_get_contents($configPath);
     if (preg_match('/email:\s*"([^"]+)"/', $config, $match)) {
         $recipient = $match[1];
     }
+}
+
+if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+    http_response_code(500);
+    echo json_encode(['message' => 'Site email is not configured']);
+    exit;
 }
 
 $name = trim($_POST['name'] ?? '');
