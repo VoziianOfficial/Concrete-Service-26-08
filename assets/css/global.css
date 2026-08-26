@@ -350,7 +350,7 @@ button, input, textarea, select { font: inherit; }
 .mobile-overlay {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  z-index: 120;
   display: grid;
   place-items: center;
   padding: max(28px, env(safe-area-inset-top)) 24px max(28px, env(safe-area-inset-bottom));
@@ -874,6 +874,18 @@ a:hover .link-icon, button:hover .link-icon { transform: translateX(4px); }
     --header-height: 78px;
     --sticky-offset: calc(var(--header-height) + 14px);
   }
+  .site-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: calc(var(--header-height) + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+    z-index: 100;
+  }
+  .header-inner {
+    height: var(--header-height);
+  }
   .mobile-overlay {
     padding-inline: 16px;
   }
@@ -906,7 +918,6 @@ a:hover .link-icon, button:hover .link-icon { transform: translateX(4px); }
     min-height: 44px;
   }
   .container { width: min(calc(100% - 32px), var(--container)); }
-  .site-header { height: 78px; }
   .brand { font-size: 1.55rem; }
   .brand img { width: 44px; height: 44px; }
   .brand-icon { width: 44px; height: 44px; flex-basis: 44px; }
