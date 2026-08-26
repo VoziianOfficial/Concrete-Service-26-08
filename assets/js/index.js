@@ -2,8 +2,14 @@ document.addEventListener("DOMContentLoaded", () => {
   new Swiper(".services-swiper", {
     loop: true,
     slidesPerView: 1,
+    spaceBetween: 18,
+    watchOverflow: false,
     autoplay: { delay: 3600 },
-    breakpoints: { 720: { slidesPerView: 2 }, 1120: { slidesPerView: 4 } }
+    navigation: {
+      nextEl: ".services-swiper .swiper-button-next",
+      prevEl: ".services-swiper .swiper-button-prev"
+    },
+    breakpoints: { 720: { slidesPerView: 2 }, 1120: { slidesPerView: 3 } }
   });
 
   const appData = {
