@@ -82,7 +82,7 @@
         </nav>
         <div class="header-cta">
           <a class="btn" href="${rel("index.html#contact")}">Get a Quote ${icon("arrow-right", "icon arrow")}</a>
-          <button class="menu-toggle" type="button" aria-label="Open menu">${icon("menu", "icon")}</button>
+          <button class="menu-toggle" type="button" aria-label="Open menu"><span class="menu-toggle-icon" aria-hidden="true"></span></button>
         </div>
       </div>`;
   }
